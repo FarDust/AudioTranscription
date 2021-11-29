@@ -718,3 +718,5 @@ FodyWeavers.xsd
 
 *.docx
 *.doc
+
+downloads/*

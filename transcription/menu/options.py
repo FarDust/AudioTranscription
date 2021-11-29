@@ -1,7 +1,9 @@
 from typing import Iterable
 from pytube import YouTube
 from pytube.query import StreamQuery, Stream
+from settings import ROOT_DIR
 from transcription.menu.imenu import MenuOption
+from pathlib import Path
 from PyInquirer import prompt
 
 from transcription.menu.questions.audio_questions import QUESTION_TAG, QUESTION_URL
@@ -21,9 +23,7 @@ class DownloadAudioOption(MenuOption):
 
             stream_list: Iterable[Stream] = yt.streams.filter(only_audio=True)
             
-            stream: Stream = self._select_stream(yt, stream_list)
-            stream.download()
-            print("¡Su audio ha sido descargado de forma exitosa!")
+            self._download_step(yt, stream_list, Path(ROOT_DIR / "downloads"))
         else:
             self.next_option.execute(option)
 
@@ -38,6 +38,11 @@ class DownloadAudioOption(MenuOption):
         tag = int(prompt(stream_question)['tag_option'])
         stream = yt.streams.get_by_itag(tag)
         return stream
+
+    def _download_step(self, yt: YouTube, stream_list: Iterable[Stream], path: Path):
+        stream: Stream = self._select_stream(yt, stream_list)
+        stream.download(str(path.absolute().resolve()))
+        print("¡Su audio ha sido descargado de forma exitosa!")
 
     def generate_stream_choices(self, stream_list: Iterable[Stream]):
         stream_choices = [
@@ -65,8 +70,6 @@ class DownloadAudioAndVideoOption(DownloadAudioOption):
 
             stream_list: Iterable[Stream] = yt.streams.filter(progressive=True)
             
-            stream: Stream = self._select_stream(yt, stream_list)
-            stream.download()
-            print("¡Su audio ha sido descargado de forma exitosa!")
+            self._download_step(yt, stream_list, Path(ROOT_DIR / "downloads"))
         else:
             self.next_option.execute(option)
