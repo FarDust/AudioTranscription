@@ -5,32 +5,19 @@ import speech_recognition as sr
 from docx import Document
 from moviepy.editor import *
 from pytube import YouTube
+from transcription.menu.imenu import NullOption
+
+from transcription.menu.options import DownloadAudioAndVideoOption, DownloadAudioOption
 
 
 # 1)
 def descargar_audio():
-    # Sirve solamente para descargar el audio de un video de youtube
-    url = input("Ingrese la URL del audio: ")
-    yt = YouTube(url)
-    print("La canción que usted eligió es: " + yt.title)
-    print(yt.streams.filter(only_audio=True))
-    tag = int(input("Ingrese el tag que quiere usar: "))
-    stream = yt.streams.get_by_itag(tag)
-    stream.download()
-    print("¡Su audio ha sido descargado de forma exitosa!")
+    DownloadAudioOption(NullOption()).execute("download_yt_audio")
 
 
 # 2)
 def descargar_video():
-    # Sirve para descargar el audio y video de youtube, juntos
-    url = input("Ingrese la URL del video: ")
-    yt = YouTube(url)
-    print("La canción que usted eligió es: " + yt.title)
-    print(yt.streams.filter(progressive=True))
-    tag = int(input("Ingrese el tag que quiere usar: "))
-    stream = yt.streams.get_by_itag(tag)
-    stream.download()
-    print("¡Su video ha sido descargado de forma exitosa!")
+    DownloadAudioAndVideoOption(NullOption()).execute("download_yt_audio_and_video")
 
 
 # 3)
